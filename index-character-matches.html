@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>🦖 Dino's What-Can-I-Make?</title>
+<!-- Dino finder stable version -->
+<style>
+body{margin:0;font-family:system-ui,-apple-system,sans-serif;background:#FFF8E8;color:#315C36}
+.wrap{max-width:720px;margin:auto;padding:28px 18px 40px}
+.card{background:#FFF0F4;border-radius:24px;padding:24px;box-shadow:0 6px 20px #00000012}
+h1{text-align:center;color:#F28BA8;margin:0 0 8px;font-size:30px}
+.sub{text-align:center;margin:0 0 22px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label{background:white;border-radius:14px;padding:13px;display:flex;gap:8px;align-items:center;cursor:pointer}
+button{border:0;border-radius:18px;padding:14px 20px;font-size:17px;font-weight:700;background:#6FAF45;color:white;margin-top:18px;width:100%;cursor:pointer}
+button.alt{background:#F28BA8}
+.quest-bar{display:flex;justify-content:space-between;gap:10px;background:#315C36;color:white;border-radius:16px;padding:15px 16px;margin-top:18px;font-weight:800;font-size:15px;box-shadow:0 4px 10px #315C3630}
+.dino-message{background:#FFF0F4;border:2px dashed #F28BA8;border-radius:18px;padding:14px;margin-top:10px;text-align:center;font-weight:700}
+#results{margin-top:22px}
+.recipe{background:white;border-radius:18px;padding:16px;margin:10px 0;border:2px solid transparent}
+.recipe.perfect{border-color:#6FAF45;box-shadow:0 4px 14px #6FAF4530}
+.recipe h3{margin:0 0 5px;color:#F28BA8}
+.badge{display:inline-block;background:#6FAF45;color:white;border-radius:999px;padding:5px 9px;font-size:12px;font-weight:800;margin-bottom:8px}
+.quest-complete{background:#FFF0F4;border-radius:20px;padding:18px;text-align:center;margin-bottom:12px}
+.recipe h3{margin:0 0 5px;color:#F28BA8}
+.small{font-size:14px}
+@media(max-width:500px){.grid{grid-template-columns:1fr}}
+
+.perfect-burst{animation:perfectPop .55s ease-out both}
+@keyframes perfectPop{0%{transform:scale(.92);opacity:.4}60%{transform:scale(1.03)}100%{transform:scale(1);opacity:1}}
+.perfect-stars{font-size:26px;letter-spacing:3px;text-align:center;margin:4px 0 8px}
+.perfect-label{display:inline-block;background:#6FAF45;color:white;border-radius:999px;padding:7px 12px;font-size:13px;font-weight:900;letter-spacing:.3px}
+.badge-board{background:#FFF0F4;border:2px solid #F28BA8;border-radius:20px;padding:16px;margin-top:22px;text-align:center}
+.badge-board h2{margin:0 0 8px;color:#F28BA8}
+.badge-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.dino-badge{background:white;border-radius:16px;padding:12px;font-weight:800;border:2px solid #6FAF45}
+.dino-badge.locked{opacity:.5;border-color:#315C36}
+.badge-reward{background:#FFF8E8;border-radius:16px;padding:12px;margin-top:14px;font-weight:800;color:#315C36;animation:perfectPop .55s ease-out both}
+.milestone-reward{background:#FFF0F4;border:2px solid #F28BA8;border-radius:18px;padding:14px;margin-top:12px;font-weight:800;color:#315C36;animation:perfectPop .55s ease-out both}
+.profile-board{background:#FFF8E8;border:2px solid #6FAF45;border-radius:20px;padding:16px;margin-top:22px;text-align:center}
+.profile-board h2{margin:0 0 8px;color:#F28BA8}
+.profile-row{display:flex;gap:8px;margin-top:12px}
+.profile-row input{flex:1;border:2px solid #F28BA8;border-radius:14px;padding:12px;font-size:16px;min-width:0;color:#315C36}
+.profile-card{background:white;border-radius:16px;padding:14px;margin-top:12px;text-align:left;font-weight:700}
+.saved-board{background:#FFF0F4;border:2px solid #F28BA8;border-radius:20px;padding:16px;margin-top:22px;text-align:center}
+.saved-board h2{margin:0 0 8px;color:#F28BA8}
+.saved-list{display:grid;gap:10px;margin-top:12px}
+.saved-recipe{background:white;border-radius:16px;padding:12px;text-align:left;font-weight:800}
+.saved-recipe button{margin-top:10px}
+.comment-board{background:#FFF8E8;border:2px solid #6FAF45;border-radius:20px;padding:16px;margin-top:22px;text-align:center}
+.comment-board h2{margin:0 0 8px;color:#F28BA8}
+.comment-row{display:grid;gap:9px;margin-top:12px}
+.comment-row input,.comment-row select,.comment-row textarea{border:2px solid #F28BA8;border-radius:14px;padding:12px;font-size:16px;color:#315C36;font-family:inherit;box-sizing:border-box;width:100%}
+.comment-row textarea{min-height:90px;resize:vertical}
+.comment-list{display:grid;gap:10px;margin-top:14px;text-align:left}
+.comment-card{background:white;border-radius:16px;padding:12px}
+.comment-card strong{color:#F28BA8}
+.achievement-board{background:#FFF0F4;border:2px solid #F28BA8;border-radius:20px;padding:16px;margin-top:22px;text-align:center}
+.achievement-board h2{margin:0 0 8px;color:#F28BA8}
+.achievement-list{display:grid;gap:10px;margin-top:12px}
+.achievement-card{background:white;border-radius:16px;padding:12px;font-weight:800;border:2px solid #6FAF45}
+.achievement-card.locked{opacity:.5;border-color:#315C36}
+.reward-closet{background:#FFF8E8;border:2px solid #F28BA8;border-radius:20px;padding:16px;margin-top:22px;text-align:center}
+.reward-closet h2{margin:0 0 8px;color:#F28BA8}
+.reward-choice{background:white;border:2px solid #6FAF45;border-radius:16px;padding:12px;margin-top:10px;font-weight:800}
+.reward-choice.locked{opacity:.5;border-color:#315C36}
+.reward-choice.equipped{border-color:#F28BA8;box-shadow:0 0 0 3px #F28BA830}
+.finder-board{background:#FFF0F4;border:2px solid #6FAF45;border-radius:20px;padding:16px;margin-top:22px;text-align:center}
+.finder-board h2{margin:0 0 8px;color:#F28BA8}
+.finder-row{display:flex;gap:8px;margin-top:12px}
+..finder-row input{display:block;width:100%;box-sizing:border-box;flex:1 1 auto;min-width:0;max-width:100%;height:48px;border:2px solid #F28BA8;border-radius:14px;padding:12px;font-size:16px;color:#315C36;background:white;}
+.finder-result{background:white;border-radius:16px;padding:14px;margin-top:12px;text-align:left}
+.shop-card{background:#FFF8E8;border:2px solid #F28BA8;border-radius:16px;padding:13px;margin-top:10px}
+.shop-card h4{margin:0 0 5px;color:#315C36}
+.shop-card p{margin:5px 0;font-size:14px}
+.shop-links{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}
+.shop-links a{display:block;color:white;text-align:center;text-decoration:none;border-radius:14px;padding:10px;font-weight:800}
+.finder-result h3{margin:0 0 6px;color:#F28BA8}
+/* Rook Mercer's Leftover Lab palette — scoped so Lil Dino and Juniper stay unchanged */
+#rook-leftover-lab{background:#F5D6BF;border:2px solid #C96F3B;color:#493D37}
+#rook-leftover-lab h2{color:#493D37}
+#rook-leftover-lab .small{color:#493D37}
+#rook-leftover-lab .rook-note{margin-top:12px;padding:12px 14px;border-radius:14px;background:#fffaf6;border-left:5px solid #579A98;color:#493D37;text-align:left;font-size:14px;line-height:1.5}
+#rook-leftover-lab .rook-note strong{color:#C96F3B}
+#rook-leftover-lab .finder-row input{border:2px solid #579A98;background:#fffaf6;color:#493D37}
+#rook-leftover-lab .finder-row button{background:#C96F3B;border:2px solid #493D37;color:#fffaf6}
+#rook-leftover-lab .finder-result{background:#fffaf6;border:1px solid #D99470;color:#493D37}
+#rook-leftover-lab .finder-result h3{color:#C96F3B}
+#rook-leftover-lab .shop-card{background:#F5D6BF;border:2px solid #579A98}
+#rook-leftover-lab .shop-card h4{color:#493D37}
+#rook-leftover-lab .shop-links a{background:#579A98!important;color:#fffaf6}
+button[data-save-recipe]{display:none}
+@media(max-width:500px){.badge-list{grid-template-columns:1fr}}
+@media(max-width:500px){.finder-row{display:grid}.finder-row button{margin-top:0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="finder-board" id="rook-leftover-lab">
+      <h2>♻️ The Leftover Lab</h2>
+      <p class="small">Turn yesterday’s meals into today’s adventure! Enter one or more leftovers and Rook will help you transform them, combine them, or tell you when your leftovers are a truly questionable team-up. ♻️</p>
+      <div class="rook-note"><strong>🔧 Rook’s Note:</strong> Try combining two leftovers to see if they make a decent new meal. If the idea is a disaster, I’ll tell you straight. Waste not, want not—just make sure your leftovers have been stored safely before experimenting.</div>
+      <div class="finder-row">
+        <input id="leftoverSearch" type="text" placeholder="Try: leftover spaghetti + leftover steak...">
+        <button class="alt" onclick="findLeftoverIdeas()">♻️ Mix My Leftovers!</button>
+      </div>
+      <div id="leftoverResult"></div>
+    </div>
+    <div id="dinoReaction" style="background:#FFF0F4;border:3px solid #F28BA8;border-radius:20px;padding:18px;margin-bottom:16px;text-align:center;font-weight:800;font-size:19px;">
+      🦖💗 LIL DINO SAYS: Hi, adventurer! 🗺️✨<br><span style="font-size:15px;font-weight:600;">I'm ready for your recipe adventure!</span>
+    </div>
+    <h1>🦖 Dino's What-Can-I-Make?</h1>
+    <p class="sub">Tell Lil Dino what you have, and he'll help you find your next recipe adventure! 🍓✨</p>
+
+    <div class="quest-bar"><span>🧺 INGREDIENT CHECKLIST</span><span id="progress">0 ingredients selected</span></div>
+    <div id="dinoMessage" class="dino-message">✨ Pick the ingredients you have!</div>
+    <div class="grid">
+      <label><input type="checkbox" value="strawberries"> 🍓 Strawberries</label>
+      <label><input type="checkbox" value="eggs"> 🥚 Eggs</label>
+      <label><input type="checkbox" value="milk"> 🥛 Milk</label>
+      <label><input type="checkbox" value="flour"> 🌾 Flour</label>
+      <label><input type="checkbox" value="butter"> 🧈 Butter</label>
+      <label><input type="checkbox" value="chocolate"> 🍫 Chocolate Chips</label>
+      <label><input type="checkbox" value="bread"> 🍞 Bread</label>
+      <label><input type="checkbox" value="spaghetti"> 🍝 Spaghetti</label>
+      <label><input type="checkbox" value="marinara"> 🍅 Marinara Sauce</label>
+      <label><input type="checkbox" value="lemon"> 🍋 Lemon</label>
+      <label><input type="checkbox" value="potatoes"> 🥔 Potatoes</label>
+      <label><input type="checkbox" value="white vinegar"> 🍶 White Vinegar</label>
+      <label><input type="checkbox" value="salt"> 🧂 Salt</label>
+      <label><input type="checkbox" value="fry seasoning"> 🍟 Shaker Fry Seasoning</label>
+      <label><input type="checkbox" value="rosemary salt"> 🌿 Rosemary Salt</label>
+      <label><input type="checkbox" value="bone-in chicken"> 🍗 Bone-in Chicken</label>
+      <label><input type="checkbox" value="buttermilk"> 🥛 Buttermilk</label>
+      <label><input type="checkbox" value="all-purpose flour"> 🌾 All-Purpose Flour</label>
+      <label><input type="checkbox" value="cornstarch"> 🥣 Cornstarch</label>
+      <label><input type="checkbox" value="black pepper"> ⚫ Black Pepper</label>
+      <label><input type="checkbox" value="sweet paprika"> 🌶️ Sweet Paprika</label>
+      <label><input type="checkbox" value="cayenne pepper"> 🌶️ Cayenne Pepper</label>
+      <label><input type="checkbox" value="onion powder"> 🧅 Onion Powder</label>
+      <label><input type="checkbox" value="garlic powder"> 🧄 Garlic Powder</label>
+      <label><input type="checkbox" value="mustard powder"> 🟡 Mustard Powder</label>
+      <label><input type="checkbox" value="ginger powder"> 🫚 Ginger Powder</label>
+      <label><input type="checkbox" value="dried thyme"> 🌿 Dried Thyme</label>
+      <label><input type="checkbox" value="dried oregano"> 🌿 Dried Oregano</label>
+      <label><input type="checkbox" value="vegetable oil"> 🫗 Vegetable Oil</label>
+      <label><input type="checkbox" value="box cake mix"> 🎂 Box Cake Mix</label>
+      <label><input type="checkbox" value="frosting"> 🧁 Frosting</label>
+      <label><input type="checkbox" value="candy melts"> 🍫 Candy Melts</label>
+      <label><input type="checkbox" value="sprinkles"> 🌈 Sprinkles</label>
+    </div>
+
+    <button onclick="findRecipes()">🔎 Find My Recipes!</button>
+    <div id="results"></div>
+    <div class="finder-board">
+      <h2>🔎 Dino's Ingredient Finder</h2>
+      <p class="small">Need an ingredient for your next recipe? Tell Lil Dino what you're looking for and see where to start searching! 🦖🗺️</p>
+      <div class="finder-row">
+        <input id="ingredientSearch" type="text" placeholder="Try: strawberries, flour, lemon...">
+        <button class="alt" onclick="findIngredient()">🔎 Find It!</button>
+      </div>
+      <div id="ingredientResult"></div>
+      <div class="finder-result" style="margin-top:14px;">
+        <h3>📍 Find It Near Me</h3>
+        <p>Enter your ZIP code or city, and Lil Dino can open a map search for stores near you that may carry the ingredient! 🦖🛒</p>
+        <div class="finder-row">
+          <input id="ingredientLocation" type="text" placeholder="ZIP code or city">
+          <button type="button" class="alt" onclick="findNearbyStores(event)">📍 Find Stores</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const recipes=[
+ {name:"🥞 Dino’s Strawberry Pancake Quest",character:"Lil Dino",need:["strawberries","eggs","milk","flour","butter"]},
+ {name:"🍝 Dino’s Spaghetti & Garlic Bread Quest",character:"Lil Dino",need:["spaghetti","marinara","bread","butter"]},
+ {name:"🍪 Niblet’s Chocolate Chip Cookie Quest",character:"Niblet",need:["chocolate","eggs","flour","butter"]},
+ {name:"🍓 Dino’s Strawberry Refresher Quest",character:"Lil Dino",need:["strawberries","lemon"]},
+ {name:"🍟 Rook’s Kitchen Experiment: French Fries",character:"Rook Mercer",need:["potatoes","white vinegar","salt","fry seasoning","rosemary salt"]},
+ {name:"🍗 Chef Saffron’s Golden-Crust Fried Chicken",character:"Chef Saffron",need:["bone-in chicken","buttermilk","salt","eggs","all-purpose flour","cornstarch","black pepper","sweet paprika","cayenne pepper","onion powder","garlic powder","mustard powder","ginger powder","dried thyme","dried oregano","vegetable oil"]},
+ {name:"🍡 The Archivist’s Cake Pops",character:"The Archivist",need:["box cake mix","frosting","candy melts","sprinkles"]}
+];
+const simpleIngredientSass=[
+ 'You seriously searched for {ingredient}? 😭😂 What did you think this was, a treasure hunt? It’s in the grocery store. In the regular grocery store. I’m a dinosaur and even I know where it is. 🦖🙄 Go find it, adventurer. I have faith in you… unfortunately. 💗',
+ 'Bestie… {ingredient}? 😭🦖 You really needed Lil Dino for THAT? It’s a basic grocery-store ingredient. Go forth and locate the dairy aisle like the brave adventurer you claim to be. 😂💗',
+ 'You called in a dinosaur… for {ingredient}. 😭🦖 I have questions. It’s literally at the grocery store. Please go find it before I lose faith in humanity. 😂🙄',
+ '🦖🚨 EMERGENCY QUEST: Someone needs {ingredient}. Never fear… actually, never mind. This one is ridiculously easy to find. 😂 Go to the grocery store, adventurer.',
+ '{ingredient}? Seriously? 😭😂 Lil Dino has crossed mountains for rare ingredients and you summoned me for this? It’s in the regular grocery store. You’ve got this. Probably. 🦖💗',
+ 'I’m a dinosaur with a backpack and even I know where to find {ingredient}. 🦖🎒😂 Please tell me you’re not making me do the whole quest for you. Go check the grocery store!',
+ '🦖🙄 You want a map… to {ingredient}? A MAP?! 😂 It’s a normal grocery-store ingredient. Go use your eyes, adventurer. I believe in you. Sort of. 💗',
+ 'Lil Dino has investigated the case of {ingredient}… and the answer is: the grocery store. 😭🦖 Mystery solved. You’re welcome. 😂✨',
+ 'You really clicked the Ingredient Finder for {ingredient}? 😭😂 That is honestly adorable. It’s easy to find at a regular grocery store. Now go complete your tiny little quest, adventurer. 🦖💗',
+ '🦖💅 Darling, {ingredient} is not a rare treasure. 😂 It’s a basic grocery item. Go find it yourself, adventurer. Lil Dino has important dinosaur business to attend to. 🙄💗'
+];
+const ingredientGuide={
+ strawberries:{name:'🍓 Strawberries',places:'Produce section, farmers markets, or local fruit stands.',tips:'Look for bright red berries with fresh green tops.'},
+ flour:{name:'🌾 Flour',places:'Baking aisle at grocery or warehouse stores.',tips:'All-purpose flour is a great starting choice for many Dino recipes.'},
+ eggs:{name:'🥚 Eggs',places:'Refrigerated egg section at grocery stores or local markets.',tips:'Keep eggs refrigerated and check the carton date.'},
+ milk:{name:'🥛 Milk',places:'Refrigerated dairy section at grocery stores or markets.',tips:'Choose the type your recipe calls for.'},
+ butter:{name:'🧈 Butter',places:'Refrigerated dairy section at grocery or warehouse stores.',tips:'Unsalted butter is handy for many baking recipes.'},
+ 'chocolate chips':{name:'🍫 Chocolate Chips',places:'Baking aisle or candy/baking section.',tips:'Semi-sweet chocolate chips work well for many cookies.'},
+ bread:{name:'🍞 Bread',places:'Bakery or bread aisle, local bakeries, or farmers markets.',tips:'French or Italian bread is great for garlic bread.'},
+ spaghetti:{name:'🍝 Spaghetti',places:'Pasta aisle at grocery or warehouse stores.',tips:'Check the package for cooking time and serving size.'},
+ marinara:{name:'🍅 Marinara Sauce',places:'Pasta and sauce aisle or refrigerated fresh-pasta section.',tips:'Choose a tomato marinara you enjoy.'},
+ lemon:{name:'🍋 Lemon',places:'Produce section, farmers markets, or fruit stands.',tips:'Choose lemons that feel firm with a little give.'},
+ 'dragon fruit':{name:'🐉 Dragon Fruit',places:'Larger grocery stores, farmers markets, or Asian/international markets.',tips:'Availability changes by season.'},
+ 'oyster sauce':{name:'🦪 Oyster Sauce',places:'Asian/international grocery stores or the international foods aisle.',tips:'Look for oyster sauce near soy sauce and other Asian cooking sauces.',hardToFind:true},
+ 'lemongrass':{name:'🌿 Lemongrass',places:'Asian/international grocery stores, larger produce sections, or farmers markets.',tips:'Fresh stalks are usually found with specialty herbs and produce.',hardToFind:true},
+ 'lemon grass':{name:'🌿 Lemongrass',places:'Asian/international grocery stores, larger produce sections, or farmers markets.',tips:'Fresh stalks are usually found with specialty herbs and produce.',hardToFind:true}
+};
+document.querySelectorAll('input[type="checkbox"]').forEach(box=>{
+ box.addEventListener('change',()=>{
+   const count=document.querySelectorAll('input[type="checkbox"]:checked').length;
+   document.getElementById('progress').textContent=count+' ingredient'+(count===1?'':'s')+' selected';
+   document.getElementById('dinoMessage').textContent=count?'🦖✨ Great choices! Keep picking ingredients or find your recipes!':'✨ Pick the ingredients you have!';
+ });
+});
+function findRecipes(){
+ const have=[...document.querySelectorAll('input[type="checkbox"]:checked')].map(x=>x.value);
+ const out=document.getElementById('results');
+ if(!have.length){
+   document.getElementById('dinoMessage').textContent='🦖💗 Pick at least one ingredient so Lil Dino can help!';
+   out.innerHTML="<div class='recipe'><h3>🦖 Your recipe list is waiting!</h3><p>Pick an ingredient above, then try again.</p></div>";
+   return;
+ }
+ const scored=recipes.map(r=>({name:r.name,character:r.character,need:r.need,matched:r.need.filter(x=>have.includes(x)).length,missing:r.need.filter(x=>!have.includes(x))})).filter(r=>r.matched>0).sort((a,b)=>b.matched-a.matched);
+ document.getElementById('dinoMessage').textContent=scored.some(r=>!r.missing.length)?'🎉🦖 Perfect match! Lil Dino found a recipe you can make!':'🔎🦖 Nice work! Here are your closest recipe matches!';
+ document.getElementById('dinoReaction').innerHTML=scored.some(r=>!r.missing.length)?'🎉🦖 LIL DINO SAYS: Perfect match!<br><span style="font-size:15px;font-weight:600;">We found a recipe you can make!</span>':'🤔🦖 LIL DINO SAYS: We’re getting close!<br><span style="font-size:15px;font-weight:600;">Check your recipe matches below!</span>';
+ out.innerHTML="<h2>🍓 Your Recipe Matches</h2>"+scored.map(r=>"<div class='recipe "+(!r.missing.length?'perfect':'')+"'>"+(!r.missing.length?"<span class='badge'>🏆 PERFECT MATCH!</span>":"")+"<h3>"+r.name+"</h3><p class='small'><strong>🧑‍🍳 Made by: "+r.character+"</strong></p><p>"+(!r.missing.length?"🎉 You have everything you need!":"🧩 You have "+r.matched+" of "+r.need.length+" main ingredients.")+"</p><p class='small'>"+(r.missing.length?"🔎 Still needed: "+r.missing.map(x=>x.replace(/-/g," ").replace(/\b\w/g,c=>c.toUpperCase())).join(", "):"✨ Ready to cook! Go, Dino, go!")+"</p></div>").join("");
+}
+function findLeftoverIdeas(){
+ const raw=document.getElementById('leftoverSearch').value.trim().toLowerCase();
+ const box=document.getElementById('leftoverResult');
+ if(!raw){box.innerHTML='<div class="finder-result"><h3>🦖♻️ Your leftover quest is waiting!</h3><p>Enter one or more leftover meals, like <strong>leftover spaghetti + leftover steak</strong>, and Lil Dino will work out the makeover.</p></div>';return;}
+ const items=raw.split(/\s*(?:\+|,|\band\b)\s*/).map(x=>x.replace(/^leftover\s+/,'').trim()).filter(Boolean);
+ const text=items.join(' + ');
+ const pick=(arr)=>arr[Math.floor(Math.random()*arr.length)];
+ const has=(...words)=>items.some(item=>words.some(word=>item.includes(word)));
+ let title='♻️ Leftover Lab Result';
+ let message='';
+ let ideas=[];
+ if(items.length>=2 && has('spaghetti','pasta') && has('steak','beef')){
+   title='🍝🥩 Leftover Power Combo!';
+   message=pick(['🦖💗 YES. These leftovers actually belong together. I approve this delicious team-up. 😂','🦖✨ Ohhh, this is a GOOD one. Lil Dino officially approves this leftover alliance!','🦖🍝🥩 Look at you making smart leftover decisions. This combo has serious potential!']);
+   ideas=['Slice the steak and toss it with the spaghetti for a hearty steak pasta','Warm everything with marinara or garlic butter and add Parmesan','Add sautéed peppers, onions, or spinach for a complete skillet meal'];
+ }else if(items.length>=2 && ((has('pizza')&&has('potato soup'))||(has('pizza')&&has('soup')))){
+   title='🍕🥣 Umm... About This Combo';
+   message=pick(['🦖🚨 I support leftovers. I support creativity. But pizza + potato soup? Bestie... even I have dinosaur limits. 😂','🦖😳 Okay... I have questions. Pizza and potato soup? That is a bold choice, adventurer.','🦖🙅‍♂️ Lil Dino has reviewed this combination and would like to file a polite food objection. 😂']);
+   ideas=['Keep them separate and give each one a makeover','Turn the potato soup into a creamy side and crisp the pizza in a skillet or oven','If you are feeling brave, use a small amount of the pizza toppings in the soup instead of combining the whole meals'];
+ }else if(items.length>=2 && (has('chicken')&&has('rice'))){
+   title='🍗🍚 Leftover Power Combo!';
+   message=pick(['🦖✨ Now THAT is a team-up. Let’s turn those leftovers into something new!','🦖🍗🍚 Finally, a leftover duo that understands the assignment. 😂','🦖💗 Chicken and rice? Easy win. Let’s give them a fresh adventure!']);
+   ideas=['Make a quick chicken fried-rice skillet','Turn them into a seasoned chicken-and-rice bowl with vegetables','Wrap them in tortillas with cheese and salsa for a new meal'];
+ }else if(items.length>=2 && ((has('taco')||has('tacos'))&&has('rice'))){
+   title='🌮🍚 Leftover Power Combo!';
+   message=pick(['🦖🌮 Taco night is getting a sequel. Let’s remix it!','🦖✨ These leftovers are ready for a taco comeback tour.','🦖🌮 I see potential. Let’s turn yesterday’s tacos into today’s new meal!']);
+   ideas=['Make a taco rice bowl with the taco filling and rice','Turn it into a cheesy skillet with salsa','Stuff it into a burrito or quesadilla'];
+ }else if(items.length>=2 && (has('pasta','spaghetti')&&has('chicken'))){
+   title='🍝🍗 Leftover Power Combo!';
+   message=pick(['🦖✨ Excellent choice. Pasta and chicken are officially going on a second adventure.','🦖🍝🍗 This duo is absolutely coming back for an encore.','🦖💗 Pasta + chicken? Yep. We can work with this!']);
+   ideas=['Make a quick chicken pasta skillet','Add sauce and cheese, then bake it into a casserole','Turn it into a cold pasta salad with vegetables'];
+ }else if(items.length>=2){
+   title='🧪 Leftover Lab Experiment';
+   message=pick(['🦖🤢 UHHH... what is happening here?! Lil Dino is officially disgusted. 😭 Please do NOT throw all of that together. 😂','🦖🤮 Nope. Nope nope nope. Lil Dino has seen enough. This leftover combo is giving me the ick. 😂','🦖😳🤢 I... genuinely do not know what to say. Lil Dino recommends keeping these leftovers VERY far apart. 😭😂']);
+   ideas=['Keep the leftovers separate and find one ingredient that can connect them, like cheese, rice, tortillas, or a simple sauce','Turn the more neutral leftover into the base and use the other as a topping or filling','If the flavors clash, give each leftover its own makeover instead of forcing a food friendship'];
+ }else if(has('spaghetti','pasta')){
+   title='🍝 Leftover Spaghetti Makeover';
+   message='🦖😂 Lil Dino says: We already had spaghetti yesterday. We are NOT serving the exact same plate again. Give it a glow-up!';
+   ideas=['Bake it with cheese for a crispy pasta casserole','Make a spaghetti frittata with eggs and Parmesan','Toss it with vegetables, garlic butter, or a new sauce for a different flavor'];
+ }else if(has('soup')){
+   title='🥣 Leftover Soup Makeover';
+   message='🦖🥄 Lil Dino says: Soup deserves a sequel. Let’s make it feel like a completely different meal!';
+   ideas=['Add cooked pasta, rice, beans, or vegetables to change the texture','Use it as a sauce or base for a new bowl','Add fresh herbs, cheese, croutons, or a new topping for a quick upgrade'];
+ }else if(has('pizza')){
+   title='🍕 Leftover Pizza Makeover';
+   message='🦖🍕 Lil Dino says: Cold pizza is fine... but we can do better. 😂';
+   ideas=['Crisp it in a skillet or air fryer and add a fresh salad','Chop the toppings into scrambled eggs or an omelet','Turn the slices into a crispy pizza sandwich or wrap'];
+ }else if(has('chicken')){
+   title='🍗 Leftover Chicken Makeover';
+   message='🦖✨ Lil Dino says: That chicken has another adventure in it!';
+   ideas=['Turn it into tacos, wraps, or sandwiches','Add it to pasta, rice, or a salad','Make a quick soup or quesadilla'];
+ }else{
+   title='♻️ Leftover Makeover';
+   message='🦖💗 Lil Dino says: Let’s give that leftover meal a second life instead of sending it straight to the trash.';
+   ideas=['Turn it into a bowl, wrap, sandwich, pasta, or skillet meal','Add a fresh sauce, cheese, herbs, or vegetables to change the flavor','If you cannot use it soon, freeze it when appropriate'];
+ }
+ box.innerHTML='<div class="finder-result"><h3>'+title+'</h3><p><strong>You entered:</strong> '+text.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</p><p><strong>🦖 Lil Dino says:</strong> '+message.replace(/^🦖[^:]* says: /,'')+'</p><p><strong>Try this:</strong></p><ul>'+ideas.map(x=>'<li>'+x+'</li>').join('')+'</ul><p class="small"><strong>Food-safety tip:</strong> Only use leftovers that have been stored safely and still look and smell normal. If you are unsure how long they have been stored, it is safer to throw them out.</p></div>';
+}
+function findIngredient(){
+ const key=document.getElementById('ingredientSearch').value.trim().toLowerCase().replace(/\s+/g,' ');
+ const box=document.getElementById('ingredientResult');
+ if(!key){box.innerHTML='<div class="finder-result"><h3>🦖 Your ingredient quest is waiting!</h3><p>Type an ingredient above and Lil Dino will give you some ideas for where to look.</p></div>';return;}
+ const guide=ingredientGuide[key];
+ if(guide){const q=encodeURIComponent(key);const productName={strawberries:'Fresh Strawberries',flour:'All-Purpose Flour',eggs:'Large Eggs',milk:'Whole Milk',butter:'Unsalted Butter','chocolate chips':'Semi-Sweet Chocolate Chips',bread:'French Bread',spaghetti:'Spaghetti Pasta',marinara:'Marinara Sauce',lemon:'Fresh Lemons','dragon fruit':'Fresh Dragon Fruit','oyster sauce':'Oyster Sauce','lemongrass':'Fresh Lemongrass','lemon grass':'Fresh Lemongrass'}[key]||guide.name.replace(/^\S+\s/,'');const hardToFindNote=guide.hardToFind?'<p><strong>⭐ Harder-to-find ingredient:</strong> Lil Dino will help you shop for this one online or find a specialty store nearby!</p>':'';if(!guide.hardToFind){const sass=simpleIngredientSass[Math.floor(Math.random()*simpleIngredientSass.length)].replaceAll('{ingredient}',guide.name.replace(/^\S+\s/,''));box.innerHTML='<div class="finder-result"><h3>'+guide.name+'</h3><p><strong>🦖 Lil Dino says:</strong> '+sass+'</p><p><strong>🛒 Where to look:</strong> '+guide.places+'</p><p><strong>🦖 Dino tip:</strong> '+guide.tips+'</p></div>';return;}box.innerHTML='<div class="finder-result"><h3>'+guide.name+'</h3><p><strong>🛒 Where to look:</strong> '+guide.places+'</p><p><strong>🦖 Dino tip:</strong> '+guide.tips+'</p>'+hardToFindNote+'<p><strong>🛍️ Dino found this:</strong></p><div class="shop-card"><h4>✨ '+productName+'</h4><p>🛒 A specific shopping choice for your recipe adventure.</p><div class="shop-links"><a href="https://www.walmart.com/search?q='+encodeURIComponent(productName)+'" target="_blank" rel="noopener" style="background:#6FAF45;">🛒 Walmart</a><a href="https://www.amazon.com/s?k='+encodeURIComponent(productName)+'" target="_blank" rel="noopener" style="background:#F28BA8;">📦 Amazon</a></div></div></div>';return;}
+ const q=encodeURIComponent(key);box.innerHTML='<div class="finder-result"><h3>🔎 Lil Dino is on the hunt!</h3><p>I don’t have a guide for <strong>'+key.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</strong> yet.</p><p>Try the produce section, baking aisle, refrigerated section, pasta aisle, farmers market, or specialty market.</p><p><strong>🛍️ Shop online:</strong></p><div style="display:grid;gap:8px;"><a href="https://www.walmart.com/search?q='+q+'" target="_blank" rel="noopener" style="display:block;background:#6FAF45;color:white;text-align:center;text-decoration:none;border-radius:16px;padding:12px;font-weight:800;">🛒 Find on Walmart</a><a href="https://www.amazon.com/s?k='+q+'" target="_blank" rel="noopener" style="display:block;background:#F28BA8;color:white;text-align:center;text-decoration:none;border-radius:16px;padding:12px;font-weight:800;">📦 Find on Amazon</a></div></div>';
+}
+function findNearbyStores(event){
+ if(event)event.preventDefault();
+ const ingredient=document.getElementById('ingredientSearch').value.trim();
+ const location=document.getElementById('ingredientLocation').value.trim();
+ const box=document.getElementById('ingredientResult');
+ if(!ingredient){box.innerHTML='<div class="finder-result"><h3>🦖 Pick an ingredient first!</h3><p>Type the ingredient you need above, then enter your ZIP code or city.</p></div>';return;}
+ if(!location){box.innerHTML='<div class="finder-result"><h3>📍 Where should Lil Dino search?</h3><p>Enter your ZIP code or city so we can look for nearby stores.</p></div>';return;}
+ const query=encodeURIComponent('grocery stores that sell '+ingredient+' near '+location);
+ const mapUrl='https://www.google.com/maps/search/'+query;
+ box.innerHTML='<div class="finder-result"><h3>🗺️ Map search ready!</h3><p>Lil Dino found a map search for <strong>'+ingredient.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</strong> near <strong>'+location.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</strong>. 🦖🛒</p><p style="margin-top:14px;"><a href="'+mapUrl+'" style="display:inline-block;background:#F28BA8;color:white;text-align:center;text-decoration:none;border-radius:18px;padding:14px 20px;font-size:17px;font-weight:700;">📍 Open Store Map</a></p><p class="small">If the preview blocks the map, tap and hold the button and choose to open the link in your browser.</p></div>';
+}
+</script>
+
+</body>
+</html>
